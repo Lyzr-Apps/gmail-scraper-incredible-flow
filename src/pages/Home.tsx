@@ -120,9 +120,9 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
       return { start_date: startDate, end_date: endDate }
     }
 
-    // Use yesterday as end date to avoid "future" errors (agent needs time to index emails)
+    // Use 2 days ago as end date to avoid "future" errors and Gmail indexing delays
     const end = new Date()
-    end.setDate(end.getDate() - 1) // Go back one day
+    end.setDate(end.getDate() - 2) // Go back 2 days to be safe
     end.setHours(0, 0, 0, 0)
 
     const start = new Date(end)
