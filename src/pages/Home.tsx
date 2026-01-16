@@ -283,52 +283,118 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
 
 // Contact Details Panel Component
 function ContactDetailsPanel({ contact }: { contact: Contact }) {
+  const [showNotionPreview, setShowNotionPreview] = useState(false)
+
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle className="text-lg">Email Log Preview</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-semibold text-gray-900">{contact.name}</h3>
-              <p className="text-sm text-gray-600">{contact.email}</p>
-              <p className="text-sm text-gray-500">{contact.company}</p>
-            </div>
-            <Badge variant="outline" className="bg-blue-50">
-              {contact.email_count} emails
-            </Badge>
-          </div>
-
-          <Separator />
-
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Clock className="h-4 w-4" />
-              <span>Last interaction: {contact.last_interaction}</span>
+    <>
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle className="text-lg">Email Log Preview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="font-semibold text-gray-900">{contact.name}</h3>
+                <p className="text-sm text-gray-600">{contact.email}</p>
+                <p className="text-sm text-gray-500">{contact.company}</p>
+              </div>
+              <Badge variant="outline" className="bg-blue-50">
+                {contact.email_count} emails
+              </Badge>
             </div>
 
-            <a
-              href={contact.notion_page_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
-            >
-              <ExternalLink className="h-4 w-4" />
-              View full email log in Notion
-            </a>
+            <Separator />
+
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Clock className="h-4 w-4" />
+                <span>Last interaction: {contact.last_interaction}</span>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Button
+                  onClick={() => setShowNotionPreview(true)}
+                  variant="outline"
+                  className="w-full justify-start"
+                >
+                  <Database className="h-4 w-4 mr-2" />
+                  View Notion Page Preview
+                </Button>
+
+                <a
+                  href={contact.notion_page_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 px-3 py-2 rounded hover:bg-blue-50"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Open full page in Notion
+                </a>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div className="text-sm text-gray-500">
+              <p className="mb-2 font-medium">Email History:</p>
+              <p>Complete email interaction log is available in the Notion page. Click the button above to preview or open in Notion to view all {contact.email_count} emails with subjects, dates, and snippets.</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Notion Page Preview Modal */}
+      <Dialog open={showNotionPreview} onOpenChange={setShowNotionPreview}>
+        <DialogContent className="max-w-5xl h-[85vh]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5 text-blue-600" />
+              Notion Page: {contact.name}
+            </DialogTitle>
+            <DialogDescription>
+              View the complete email interaction log stored in Notion
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex-1 border rounded-lg overflow-hidden bg-white">
+            <iframe
+              src={contact.notion_page_url}
+              className="w-full h-[calc(85vh-120px)]"
+              title={`Notion page for ${contact.name}`}
+              sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+            />
           </div>
 
-          <Separator />
-
-          <div className="text-sm text-gray-500">
-            <p className="mb-2 font-medium">Email History:</p>
-            <p>Complete email interaction log is available in the Notion page. Click the link above to view all {contact.email_count} emails with subjects, dates, and snippets.</p>
+          <div className="flex items-center justify-between pt-4 border-t">
+            <div className="text-sm text-gray-600">
+              <p className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                {contact.email_count} emails logged
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowNotionPreview(false)}
+              >
+                Close Preview
+              </Button>
+              <a
+                href={contact.notion_page_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Open in Notion
+                </Button>
+              </a>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 
