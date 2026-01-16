@@ -1,0 +1,20 @@
+{
+  "agent_name": "Email Harvester Agent",
+  "agent_id": "696a74c59ea90559bbf3f052",
+  "test_message": "{\"list_name\": \"Tech Prospects\", \"date_range\": {\"start\": \"2025-12-01\", \"end\": \"2026-01-16\"}, \"notion_database_id\": \"sample_db_id_123456789\"}",
+  "expected_purpose": "custom",
+  "timestamp": "2026-01-16T17:29:07.667555",
+  "is_valid_json": true,
+  "validation_errors": [
+    "Missing 'result' field",
+    "Missing 'metadata' field (optional but recommended)"
+  ],
+  "actual_response": {
+    "status": "error",
+    "error": {
+      "code": "GMAIL_UNAVAILABLE",
+      "message": "Gmail tool is not connected. Please authenticate Gmail integration in Composio."
+    }
+  },
+  "raw_response": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"code\": \"GMAIL_UNAVAILABLE\",\n    \"message\": \"Gmail tool is not connected. Please authenticate Gmail integration in Composio.\"\n  }\n}"
+}

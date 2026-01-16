@@ -1,0 +1,119 @@
+{
+  "agent_name": "Email Harvester Agent",
+  "agent_id": "696a74c59ea90559bbf3f052",
+  "agent_purpose": "custom",
+  "description": "Email Harvester Agent returns JSON responses with status and error fields. When successful, it would include result field with email harvesting data including contacts found, emails processed, and Notion database information.",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "list_name": "string",
+      "notion_database_url": "string",
+      "contacts_added": "number",
+      "contacts_updated": "number",
+      "total_contacts": "number",
+      "total_emails_logged": "number",
+      "scan_date_range": {
+        "start": "string",
+        "end": "string"
+      },
+      "contacts": [
+        {
+          "name": "string",
+          "email": "string",
+          "company": "string",
+          "email_count": "number",
+          "last_interaction": "string",
+          "notion_page_url": "string"
+        }
+      ]
+    },
+    "message": "string"
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "list_name": "Sample Contacts List",
+      "notion_database_url": "https://notion.so/database/sample123",
+      "contacts_added": 2,
+      "contacts_updated": 1,
+      "total_contacts": 3,
+      "total_emails_logged": 8,
+      "scan_date_range": {
+        "start": "2024-05-01",
+        "end": "2024-05-31"
+      },
+      "contacts": [
+        {
+          "name": "Jane Doe",
+          "email": "jane.doe@example.com",
+          "company": "Acme Inc",
+          "email_count": 4,
+          "last_interaction": "2024-05-28",
+          "notion_page_url": "https://notion.so/page/contact1"
+        },
+        {
+          "name": "Bob Lee",
+          "email": "bob.lee@xyzcorp.com",
+          "company": "XYZ Corp",
+          "email_count": 3,
+          "last_interaction": "2024-05-25",
+          "notion_page_url": "https://notion.so/page/contact2"
+        },
+        {
+          "name": "Sara Singh",
+          "email": "sara.singh@gmail.com",
+          "company": "Freelancer",
+          "email_count": 1,
+          "last_interaction": "2024-05-16",
+          "notion_page_url": "https://notion.so/page/contact3"
+        }
+      ]
+    },
+    "message": "Successfully processed 8 emails from 3 contacts"
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-01-16T17:29:21.252911",
+  "test_message_used": "Provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "list_name": "Sample Contacts List",
+      "notion_database_url": "https://notion.so/database/sample123",
+      "contacts_added": 2,
+      "contacts_updated": 1,
+      "total_contacts": 3,
+      "total_emails_logged": 8,
+      "scan_date_range": {
+        "start": "2024-05-01",
+        "end": "2024-05-31"
+      },
+      "contacts": [
+        {
+          "name": "Jane Doe",
+          "email": "jane.doe@example.com",
+          "company": "Acme Inc",
+          "email_count": 4,
+          "last_interaction": "2024-05-28",
+          "notion_page_url": "https://notion.so/page/contact1"
+        },
+        {
+          "name": "Bob Lee",
+          "email": "bob.lee@xyzcorp.com",
+          "company": "XYZ Corp",
+          "email_count": 3,
+          "last_interaction": "2024-05-25",
+          "notion_page_url": "https://notion.so/page/contact2"
+        },
+        {
+          "name": "Sara Singh",
+          "email": "sara.singh@gmail.com",
+          "company": "Freelancer",
+          "email_count": 1,
+          "last_interaction": "2024-05-16",
+          "notion_page_url": "https://notion.so/page/contact3"
+        }
+      ]
+    },
+    "message": "Successfully processed 8 emails from 3 contacts"
+  }
+}

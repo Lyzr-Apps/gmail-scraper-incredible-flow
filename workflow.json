@@ -1,0 +1,80 @@
+{
+  "workflow_name": "Email Harvester Pro",
+  "workflow_type": "single_agent",
+  "nodes": [
+    {
+      "id": "user_input",
+      "type": "Input",
+      "label": "User Configuration",
+      "nodeCategory": "input",
+      "position": {
+        "x": 100,
+        "y": 200
+      },
+      "data": {
+        "description": "User provides list name, target domains, and date range for email scanning"
+      }
+    },
+    {
+      "id": "email_harvester_agent",
+      "type": "Agent",
+      "label": "Email Harvester Agent",
+      "nodeCategory": "agent",
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "data": {
+        "agent_id": "696a74c59ea90559bbf3f052",
+        "agent_name": "Email Harvester Agent",
+        "description": "Creates Notion database for new company lists. Scans Gmail for emails from specified domains, extracts sender metadata and builds email interaction log (subject, date, snippet) for each contact. Creates Notion pages for new contacts with email history as page content. On incremental scans, appends new emails to existing contact pages and updates last interaction date and email count.",
+        "tools": ["Gmail (GMAIL_FETCH_EMAILS)", "Notion (NOTION_CREATE_NOTION_PAGE, NOTION_FETCH_ROW, NOTION_ADD_PAGE_CONTENT)"],
+        "provider": "OpenAI",
+        "model": "gpt-4.1",
+        "temperature": 0.2,
+        "top_p": 1
+      }
+    },
+    {
+      "id": "output_node",
+      "type": "Output",
+      "label": "Harvest Results",
+      "nodeCategory": "end",
+      "position": {
+        "x": 700,
+        "y": 200
+      },
+      "data": {
+        "description": "Returns contact count, email count, and Notion database link"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_1",
+      "source": "user_input",
+      "target": "email_harvester_agent",
+      "type": "default"
+    },
+    {
+      "id": "edge_2",
+      "source": "email_harvester_agent",
+      "target": "output_node",
+      "type": "default"
+    }
+  ],
+  "agents": [
+    {
+      "agent_id": "696a74c59ea90559bbf3f052",
+      "agent_name": "Email Harvester Agent",
+      "agent_type": "single",
+      "node_id": "email_harvester_agent",
+      "response_schema_file": "response_schemas/email_harvester_agent_response.json"
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-01-16T00:00:00Z",
+    "total_agents": 1,
+    "workflow_description": "Email Harvester Pro scans Gmail for emails from specified domains and creates/updates a Notion database with contact pages containing comprehensive email interaction logs"
+  }
+}
