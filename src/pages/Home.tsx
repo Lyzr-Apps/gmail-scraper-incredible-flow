@@ -571,8 +571,8 @@ export default function Home() {
     setCompanyLists(companyLists.filter(list => list.id !== id))
   }
 
-  const totalContacts = companyLists.reduce((sum, list) => sum + list.contacts, 0)
-  const totalEmailsLogged = companyLists.reduce((sum, list) => sum + list.emails_logged, 0)
+  const totalContacts = companyLists.reduce((sum, list) => sum + (Number(list.contacts) || 0), 0)
+  const totalEmailsLogged = companyLists.reduce((sum, list) => sum + (Number(list.emails_logged) || 0), 0)
   const activeLists = companyLists.filter(list => list.status === 'active').length
   const lastScan = companyLists.length > 0
     ? companyLists.sort((a, b) => new Date(b.last_scan).getTime() - new Date(a.last_scan).getTime())[0].last_scan
