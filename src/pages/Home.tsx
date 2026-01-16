@@ -101,6 +101,8 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
   const [datePreset, setDatePreset] = useState('30')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const addDomain = () => {
     if (domainInput.trim() && !domains.includes(domainInput.trim())) {
@@ -132,6 +134,9 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
     if (!listName.trim() || domains.length === 0) return
 
     setLoading(true)
+    setSuccessMessage(null)
+    setErrorMessage(null)
+
     try {
       const dateRange = calculateDateRange()
       const input = JSON.stringify({
@@ -143,15 +148,27 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
       const result = await callAIAgent(input, AGENT_ID)
 
       if (result.success && result.response.status === 'success') {
-        onListCreated(result.response.result as HarvestResult)
-        setOpen(false)
-        setListName('')
-        setDomains([])
-        setDomainInput('')
-        setDatePreset('30')
+        const harvestResult = result.response.result as HarvestResult
+        setSuccessMessage(
+          `Successfully created "${harvestResult.list_name}"! Found ${harvestResult.total_contacts} contacts with ${harvestResult.total_emails_logged} emails logged.`
+        )
+        onListCreated(harvestResult)
+
+        // Close modal after showing success for 2 seconds
+        setTimeout(() => {
+          setOpen(false)
+          setListName('')
+          setDomains([])
+          setDomainInput('')
+          setDatePreset('30')
+          setSuccessMessage(null)
+        }, 2000)
+      } else {
+        setErrorMessage(result.response.message || 'Scan failed. Please try again.')
       }
     } catch (error) {
       console.error('Scan error:', error)
+      setErrorMessage('An error occurred during scanning. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -254,6 +271,24 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
                   onChange={(e) => setEndDate(e.target.value)}
                   className="mt-1"
                 />
+              </div>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                <p className="text-sm text-green-800">{successMessage}</p>
+              </div>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                <p className="text-sm text-red-800">{errorMessage}</p>
               </div>
             </div>
           )}
@@ -639,6 +674,7 @@ export default function Home() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>List Name</TableHead>
+                    <TableHead>Notion Database</TableHead>
                     <TableHead>Domains</TableHead>
                     <TableHead>Contacts</TableHead>
                     <TableHead>Emails Logged</TableHead>
@@ -651,6 +687,22 @@ export default function Home() {
                   {companyLists.map((list) => (
                     <TableRow key={list.id}>
                       <TableCell className="font-medium">{list.list_name}</TableCell>
+                      <TableCell>
+                        {list.notion_url ? (
+                          <a
+                            href={list.notion_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+                          >
+                            <Database className="h-4 w-4" />
+                            <span className="truncate max-w-[150px]">{list.list_name}</span>
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        ) : (
+                          <span className="text-sm text-gray-400">Not created</span>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {list.domains.map((domain) => (
@@ -684,17 +736,6 @@ export default function Home() {
                             <RefreshCw className="h-3 w-3 mr-1" />
                             Update
                           </Button>
-                          {list.notion_url && (
-                            <a
-                              href={list.notion_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Button size="sm" variant="ghost">
-                                <ExternalLink className="h-3 w-3" />
-                              </Button>
-                            </a>
-                          )}
                           <Button size="sm" variant="ghost">
                             <Pencil className="h-3 w-3" />
                           </Button>
