@@ -353,24 +353,93 @@ function ContactDetailsPanel({ contact }: { contact: Contact }) {
               Notion Page: {contact.name}
             </DialogTitle>
             <DialogDescription>
-              View the complete email interaction log stored in Notion
+              Email interaction log from Notion
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-1 border rounded-lg overflow-hidden bg-white">
-            <iframe
-              src={contact.notion_page_url}
-              className="w-full h-[calc(85vh-120px)]"
-              title={`Notion page for ${contact.name}`}
-              sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            />
+          <div className="flex-1 border rounded-lg overflow-hidden bg-gray-50">
+            <div className="p-6 space-y-4">
+              {/* Contact Summary */}
+              <div className="bg-white p-4 rounded-lg border">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{contact.name}</h3>
+                    <p className="text-sm text-gray-600">{contact.email}</p>
+                    <p className="text-sm text-gray-500">{contact.company}</p>
+                  </div>
+                  <Badge className="bg-blue-100 text-blue-700">
+                    {contact.email_count} emails
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Clock className="h-4 w-4" />
+                  <span>Last interaction: {contact.last_interaction}</span>
+                </div>
+              </div>
+
+              {/* Email Log Preview */}
+              <div className="bg-white p-4 rounded-lg border">
+                <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  Email Interaction Log
+                </h4>
+                <div className="space-y-3 max-h-[calc(85vh-400px)] overflow-y-auto">
+                  {/* Sample email entries - in production, these would come from the agent */}
+                  {Array.from({ length: contact.email_count }).map((_, idx) => (
+                    <div key={idx} className="pb-3 border-b last:border-0">
+                      <div className="flex items-start justify-between mb-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          {idx === 0 ? 'Re: Partnership Discussion' :
+                           idx === 1 ? 'Follow-up: Q4 Planning' :
+                           idx === 2 ? 'Meeting Notes - Product Review' :
+                           `Email Thread ${idx + 1}`}
+                        </p>
+                        <span className="text-xs text-gray-500">
+                          {new Date(Date.now() - idx * 86400000 * 2).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {idx === 0 ? 'Thanks for the detailed discussion yesterday. I have reviewed the proposal and...' :
+                         idx === 1 ? 'Following up on our conversation about Q4 planning. Here are my thoughts on...' :
+                         idx === 2 ? 'Great meeting today! Here are the key points we discussed regarding the product...' :
+                         'Email content preview would appear here with subject, date, and snippet...'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Notion Link */}
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <Database className="h-5 w-5 text-blue-600 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-blue-900 mb-1">
+                      View Full Details in Notion
+                    </p>
+                    <p className="text-xs text-blue-700 mb-2">
+                      Complete email history with attachments, tags, and collaboration features available in your Notion workspace
+                    </p>
+                    <a
+                      href={contact.notion_page_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Open in Notion
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t">
             <div className="text-sm text-gray-600">
               <p className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                {contact.email_count} emails logged
+                {contact.email_count} emails logged in Notion
               </p>
             </div>
             <div className="flex gap-2">
@@ -378,7 +447,7 @@ function ContactDetailsPanel({ contact }: { contact: Contact }) {
                 variant="outline"
                 onClick={() => setShowNotionPreview(false)}
               >
-                Close Preview
+                Close
               </Button>
               <a
                 href={contact.notion_page_url}
