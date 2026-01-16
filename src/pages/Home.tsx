@@ -153,8 +153,12 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
 
       if (result.success && result.response.status === 'success') {
         const harvestResult = result.response.result as HarvestResult
+        const isUpdate = result.response.message?.includes('Updated existing') || result.response.message?.includes('updated')
+
         setSuccessMessage(
-          `Successfully created "${harvestResult.list_name}"! Found ${harvestResult.total_contacts} contacts with ${harvestResult.total_emails_logged} emails logged.`
+          isUpdate
+            ? `Updated "${harvestResult.list_name}"! Added ${harvestResult.contacts_added} new contacts, updated ${harvestResult.contacts_updated} existing. Total: ${harvestResult.total_contacts} contacts, ${harvestResult.total_emails_logged} emails. Notion database and "All Contacts" view confirmed.`
+            : `Created "${harvestResult.list_name}"! Found ${harvestResult.total_contacts} contacts with ${harvestResult.total_emails_logged} emails logged. Notion database and "All Contacts" view created successfully.`
         )
         onListCreated(harvestResult)
 
@@ -554,7 +558,7 @@ export default function Home() {
       domains: [],
       contacts: result.total_contacts,
       emails_logged: result.total_emails_logged,
-      last_scan: result.scan_date_range.end,
+      last_scan: result.scan_date_range?.end || new Date().toISOString().split('T')[0],
       status: 'active',
       notion_url: result.notion_database_url
     }
