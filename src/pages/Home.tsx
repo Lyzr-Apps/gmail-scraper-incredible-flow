@@ -208,7 +208,10 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
 
           <div>
             <Label>Company Domains</Label>
-            <div className="flex gap-2 mt-1">
+            <p className="text-xs text-gray-500 mt-1 mb-2">
+              Type a domain and click the + button to add it to the search
+            </p>
+            <div className="flex gap-2">
               <Input
                 placeholder="e.g., acme.com"
                 value={domainInput}
