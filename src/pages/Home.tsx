@@ -116,14 +116,17 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
   }
 
   const calculateDateRange = () => {
-    const end = new Date()
-    const start = new Date()
-
     if (datePreset === 'custom') {
       return { start_date: startDate, end_date: endDate }
     }
 
-    start.setDate(end.getDate() - parseInt(datePreset))
+    // Use UTC midnight to avoid timezone issues
+    const end = new Date()
+    end.setHours(0, 0, 0, 0)
+
+    const start = new Date(end)
+    start.setDate(start.getDate() - parseInt(datePreset))
+
     return {
       start_date: start.toISOString().split('T')[0],
       end_date: end.toISOString().split('T')[0]
