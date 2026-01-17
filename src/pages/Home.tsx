@@ -574,6 +574,57 @@ export default function Home() {
     setActiveTab('scan-results')
   }
 
+  const handleRescan = async (list: CompanyList) => {
+    // Set status to scanning
+    setCompanyLists(companyLists.map(l =>
+      l.id === list.id ? { ...l, status: 'scanning' } : l
+    ))
+
+    try {
+      const dateRange = {
+        start_date: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
+        end_date: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0]
+      }
+
+      const input = JSON.stringify({
+        list_name: list.list_name,
+        target_domains: list.domains,
+        date_range: dateRange,
+        notion_database_id: notionDatabaseId
+      })
+
+      const result = await callAIAgent(input, AGENT_ID)
+
+      if (result.success && result.response.status === 'success') {
+        const harvestResult = result.response.result as HarvestResult
+
+        // Update the list with new data
+        setCompanyLists(companyLists.map(l =>
+          l.id === list.id ? {
+            ...l,
+            contacts: harvestResult.total_contacts,
+            emails_logged: harvestResult.total_emails_logged,
+            last_scan: harvestResult.scan_date_range?.end || new Date().toISOString().split('T')[0],
+            status: 'active'
+          } : l
+        ))
+
+        setScanResult(harvestResult)
+        setActiveTab('scan-results')
+      } else {
+        // Set status back to active on error
+        setCompanyLists(companyLists.map(l =>
+          l.id === list.id ? { ...l, status: 'error' } : l
+        ))
+      }
+    } catch (error) {
+      console.error('Rescan error:', error)
+      setCompanyLists(companyLists.map(l =>
+        l.id === list.id ? { ...l, status: 'error' } : l
+      ))
+    }
+  }
+
   const deleteList = (id: string) => {
     setCompanyLists(companyLists.filter(list => list.id !== id))
   }
@@ -756,8 +807,13 @@ export default function Home() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline">
-                            <RefreshCw className="h-3 w-3 mr-1" />
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRescan(list)}
+                            disabled={list.status === 'scanning'}
+                          >
+                            <RefreshCw className={`h-3 w-3 mr-1 ${list.status === 'scanning' ? 'animate-spin' : ''}`} />
                             Update
                           </Button>
                           <Button size="sm" variant="ghost">
