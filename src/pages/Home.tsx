@@ -556,7 +556,7 @@ export default function Home() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [scanResult, setScanResult] = useState<HarvestResult | null>(null)
   const [activeTab, setActiveTab] = useState<'lists' | 'scan-results'>('lists')
-  const [notionDatabaseId, setNotionDatabaseId] = useState('04f0587f-e72a-4bbe-ad2b-13531bb48101')
+  const [notionDatabaseId, setNotionDatabaseId] = useState('2eb40f4a0e9a809eb5d7e0036f2ef716')
 
   // Sample contacts for demo
   const sampleContacts: Contact[] = scanResult?.contacts || [
