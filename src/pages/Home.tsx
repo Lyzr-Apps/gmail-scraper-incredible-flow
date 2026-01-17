@@ -140,18 +140,22 @@ function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChang
   }
 
   const handleCreateScan = async () => {
-    if (!listName.trim() || domains.length === 0) return
+    if (!listName.trim() || domains.length === 0 || !localNotionDbId.trim()) return
 
     setLoading(true)
     setSuccessMessage(null)
     setErrorMessage(null)
 
     try {
+      // Save the Notion database ID to parent component
+      onNotionDatabaseIdChange(localNotionDbId)
+
       const dateRange = calculateDateRange()
       const input = JSON.stringify({
         list_name: listName,
         target_domains: domains,
-        date_range: dateRange
+        date_range: dateRange,
+        notion_database_id: localNotionDbId
       })
 
       const result = await callAIAgent(input, AGENT_ID)
@@ -252,6 +256,23 @@ function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChang
           </div>
 
           <div>
+            <Label htmlFor="notion-db-id">Notion Database ID</Label>
+            <p className="text-xs text-gray-500 mt-1 mb-2">
+              Enter your Notion database ID (will be saved for future scans)
+            </p>
+            <Input
+              id="notion-db-id"
+              placeholder="e.g., 1234567890abcdef1234567890abcdef"
+              value={localNotionDbId}
+              onChange={(e) => setLocalNotionDbId(e.target.value)}
+              className="mt-1 font-mono text-sm"
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Find this in your Notion database URL after the workspace name
+            </p>
+          </div>
+
+          <div>
             <Label>Date Range</Label>
             <Select value={datePreset} onValueChange={setDatePreset}>
               <SelectTrigger className="mt-1">
@@ -311,7 +332,7 @@ function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChang
 
           <Button
             onClick={handleCreateScan}
-            disabled={loading || !listName.trim() || domains.length === 0}
+            disabled={loading || !listName.trim() || domains.length === 0 || !localNotionDbId.trim()}
             className="w-full bg-green-600 hover:bg-green-700"
           >
             {loading ? (
@@ -535,6 +556,7 @@ export default function Home() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [scanResult, setScanResult] = useState<HarvestResult | null>(null)
   const [activeTab, setActiveTab] = useState<'lists' | 'scan-results'>('lists')
+  const [notionDatabaseId, setNotionDatabaseId] = useState('04f0587f-e72a-4bbe-ad2b-13531bb48101')
 
   // Sample contacts for demo
   const sampleContacts: Contact[] = scanResult?.contacts || [
@@ -650,7 +672,13 @@ export default function Home() {
                   : 'View detailed scan results and contact information'}
               </p>
             </div>
-            {activeTab === 'lists' && <AddListModal onListCreated={handleListCreated} />}
+            {activeTab === 'lists' && (
+              <AddListModal
+                onListCreated={handleListCreated}
+                notionDatabaseId={notionDatabaseId}
+                onNotionDatabaseIdChange={setNotionDatabaseId}
+              />
+            )}
           </div>
 
           {/* Stats Cards */}
