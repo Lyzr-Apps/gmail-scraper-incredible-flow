@@ -268,7 +268,7 @@ function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChang
               className="mt-1 font-mono text-sm"
             />
             <p className="text-xs text-gray-400 mt-1">
-              Find this in your Notion database URL after the workspace name
+              The database ID is found in the URL when viewing database between the "/" and "?"
             </p>
           </div>
 
