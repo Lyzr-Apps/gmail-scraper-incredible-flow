@@ -541,42 +541,22 @@ function ContactDetailsPanel({ contact }: { contact: Contact }) {
 
 // Main Home Component
 export default function Home() {
-  const [companyLists, setCompanyLists] = useState<CompanyList[]>([
-    {
-      id: '1',
-      list_name: 'Acme Corp',
-      domains: ['acme.com', 'acmecorp.io'],
-      contacts: 47,
-      emails_logged: 234,
-      last_scan: '2026-01-15',
-      status: 'active',
-      notion_url: 'https://notion.so/database/acme123'
-    }
-  ])
+  const [companyLists, setCompanyLists] = useState<CompanyList[]>(() => {
+    const saved = localStorage.getItem('email_harvester_companies')
+    return saved ? JSON.parse(saved) : []
+  })
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [scanResult, setScanResult] = useState<HarvestResult | null>(null)
   const [activeTab, setActiveTab] = useState<'lists' | 'scan-results'>('lists')
   const [notionDatabaseId, setNotionDatabaseId] = useState('2eb40f4a0e9a809eb5d7e0036f2ef716')
 
-  // Sample contacts for demo
-  const sampleContacts: Contact[] = scanResult?.contacts || [
-    {
-      name: 'John Smith',
-      email: 'john.smith@acme.com',
-      company: 'Acme Corp',
-      email_count: 5,
-      last_interaction: '2026-01-14',
-      notion_page_url: 'https://notion.so/page/john123'
-    },
-    {
-      name: 'Sarah Johnson',
-      email: 'sarah.j@acme.com',
-      company: 'Acme Corp',
-      email_count: 12,
-      last_interaction: '2026-01-13',
-      notion_page_url: 'https://notion.so/page/sarah456'
-    }
-  ]
+  // Save to localStorage whenever companyLists changes
+  useEffect(() => {
+    localStorage.setItem('email_harvester_companies', JSON.stringify(companyLists))
+  }, [companyLists])
+
+  // Contacts from scan results only
+  const sampleContacts: Contact[] = scanResult?.contacts || []
 
   const handleListCreated = (result: HarvestResult) => {
     const newList: CompanyList = {
