@@ -717,7 +717,7 @@ export default function Home() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>List Name</TableHead>
+                    <TableHead>Company Name</TableHead>
                     <TableHead>Notion Database</TableHead>
                     <TableHead>Domains</TableHead>
                     <TableHead>Contacts</TableHead>
