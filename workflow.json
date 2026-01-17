@@ -74,7 +74,9 @@
   ],
   "metadata": {
     "created_at": "2026-01-16T00:00:00Z",
+    "last_updated": "2026-01-17T00:00:00Z",
     "total_agents": 1,
-    "workflow_description": "Email Harvester Pro scans Gmail for emails from specified domains and creates/updates a Notion database with contact pages containing comprehensive email interaction logs"
+    "workflow_description": "Email Harvester Pro scans Gmail for emails from specified domains and creates/updates a Notion database with contact pages containing comprehensive email interaction logs",
+    "update_notes": "Updated agent instructions to explicitly require parent_id parameter when creating Notion pages to ensure pages are created inside the database"
   }
 }
