@@ -28,7 +28,7 @@
         "agent_id": "696a74c59ea90559bbf3f052",
         "agent_name": "Email Harvester Agent",
         "description": "Creates Notion database for new company lists. Scans Gmail for emails from specified domains, extracts sender metadata and builds email interaction log (subject, date, snippet) for each contact. Creates Notion pages for new contacts with email history as page content. On incremental scans, appends new emails to existing contact pages and updates last interaction date and email count.",
-        "tools": ["Gmail (GMAIL_FETCH_EMAILS)", "Notion (NOTION_CREATE_NOTION_PAGE, NOTION_FETCH_ROW, NOTION_ADD_PAGE_CONTENT)"],
+        "tools": ["Gmail (GMAIL_FETCH_EMAILS)", "Notion (NOTION_CREATE_DATABASE, NOTION_INSERT_ROW_DATABASE, NOTION_FETCH_ROW, NOTION_ADD_PAGE_CONTENT, NOTION_UPDATE_PAGE)"],
         "provider": "OpenAI",
         "model": "gpt-4.1",
         "temperature": 0.2,
@@ -74,9 +74,9 @@
   ],
   "metadata": {
     "created_at": "2026-01-16T00:00:00Z",
-    "last_updated": "2026-01-17T00:00:00Z",
+    "last_updated": "2026-01-17T01:00:00Z",
     "total_agents": 1,
-    "workflow_description": "Email Harvester Pro scans Gmail for emails from specified domains and creates/updates a Notion database with contact pages containing comprehensive email interaction logs",
-    "update_notes": "Updated agent instructions to explicitly require parent_id parameter when creating Notion pages to ensure pages are created inside the database"
+    "workflow_description": "Email Harvester Pro scans Gmail for emails from specified domains and creates/updates a Notion database with contact rows containing comprehensive email interaction logs",
+    "update_notes": "Updated to use NOTION_INSERT_ROW_DATABASE instead of NOTION_CREATE_NOTION_PAGE. Changed from creating pages to inserting database rows with proper database_id and properties array. Added NOTION_CREATE_DATABASE and NOTION_UPDATE_PAGE actions."
   }
 }

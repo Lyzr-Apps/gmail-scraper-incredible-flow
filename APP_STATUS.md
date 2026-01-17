@@ -11,8 +11,8 @@ The Email Harvester Pro application is fully functional and running.
    - Agent Name: Email Harvester Agent
    - Status: Created, Updated (2026-01-17), and Tested
    - Response Format: JSON validated
-   - Tool Integrations: Gmail (GMAIL_FETCH_EMAILS), Notion (NOTION_CREATE_NOTION_PAGE, NOTION_FETCH_ROW, NOTION_ADD_PAGE_CONTENT)
-   - **CRITICAL FIX**: Agent instructions now explicitly require using `parent_id` parameter when calling NOTION_CREATE_NOTION_PAGE to ensure contact pages are created INSIDE the database, not as standalone pages
+   - Tool Integrations: Gmail (GMAIL_FETCH_EMAILS), Notion (NOTION_CREATE_DATABASE, NOTION_INSERT_ROW_DATABASE, NOTION_FETCH_ROW, NOTION_ADD_PAGE_CONTENT, NOTION_UPDATE_PAGE)
+   - **LATEST UPDATE (2026-01-17)**: Changed from NOTION_CREATE_NOTION_PAGE to NOTION_INSERT_ROW_DATABASE for creating contact entries. Now creates database rows directly with database_id parameter and properties array (Name, Email, Company, Domain, Email Count, Last Interaction). Property names are case-sensitive and must match database schema exactly.
 
 2. **UI Implementation**
    - File: `/app/project/src/pages/Home.tsx`
