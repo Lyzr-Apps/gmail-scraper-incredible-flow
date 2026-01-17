@@ -93,7 +93,7 @@ function StatsCard({ icon: Icon, label, value, trend }: { icon: any; label: stri
 
 // Add Company List Modal Component
 function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChange }: {
-  onListCreated: (result: HarvestResult) => void
+  onListCreated: (result: HarvestResult, domains: string[]) => void
   notionDatabaseId: string
   onNotionDatabaseIdChange: (id: string) => void
 }) {
@@ -169,7 +169,7 @@ function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChang
             ? `Updated "${harvestResult.list_name}"! Added ${harvestResult.contacts_added} new contacts, updated ${harvestResult.contacts_updated} existing. Total: ${harvestResult.total_contacts} contacts, ${harvestResult.total_emails_logged} emails. Notion database and "All Contacts" view confirmed.`
             : `Created "${harvestResult.list_name}"! Found ${harvestResult.total_contacts} contacts with ${harvestResult.total_emails_logged} emails logged. Notion database and "All Contacts" view created successfully.`
         )
-        onListCreated(harvestResult)
+        onListCreated(harvestResult, domains)
 
         // Close modal after showing success for 2 seconds
         setTimeout(() => {
@@ -558,11 +558,11 @@ export default function Home() {
   // Contacts from scan results only
   const sampleContacts: Contact[] = scanResult?.contacts || []
 
-  const handleListCreated = (result: HarvestResult) => {
+  const handleListCreated = (result: HarvestResult, domainsUsed: string[]) => {
     const newList: CompanyList = {
       id: Date.now().toString(),
       list_name: result.list_name,
-      domains: [],
+      domains: domainsUsed,
       contacts: result.total_contacts,
       emails_logged: result.total_emails_logged,
       last_scan: result.scan_date_range?.end || new Date().toISOString().split('T')[0],
@@ -581,8 +581,9 @@ export default function Home() {
     ))
 
     try {
+      // Incremental scan: start from last scan date to avoid duplicates
       const dateRange = {
-        start_date: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
+        start_date: list.last_scan,
         end_date: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString().split('T')[0]
       }
 
