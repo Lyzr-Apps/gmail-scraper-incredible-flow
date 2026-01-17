@@ -92,7 +92,11 @@ function StatsCard({ icon: Icon, label, value, trend }: { icon: any; label: stri
 }
 
 // Add Company List Modal Component
-function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult) => void }) {
+function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChange }: {
+  onListCreated: (result: HarvestResult) => void
+  notionDatabaseId: string
+  onNotionDatabaseIdChange: (id: string) => void
+}) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [listName, setListName] = useState('')
@@ -103,6 +107,7 @@ function AddListModal({ onListCreated }: { onListCreated: (result: HarvestResult
   const [endDate, setEndDate] = useState('')
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [localNotionDbId, setLocalNotionDbId] = useState(notionDatabaseId)
 
   const addDomain = () => {
     if (domainInput.trim() && !domains.includes(domainInput.trim())) {
