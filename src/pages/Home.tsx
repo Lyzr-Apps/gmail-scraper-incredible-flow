@@ -209,10 +209,10 @@ function AddListModal({ onListCreated, notionDatabaseId, onNotionDatabaseIdChang
 
         <div className="space-y-4 mt-4">
           <div>
-            <Label htmlFor="list-name">List Name</Label>
+            <Label htmlFor="list-name">Company Name</Label>
             <Input
               id="list-name"
-              placeholder="e.g., Acme Corp Partners"
+              placeholder="e.g., Acme Corp"
               value={listName}
               onChange={(e) => setListName(e.target.value)}
               className="mt-1"
